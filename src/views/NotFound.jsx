@@ -1,5 +1,5 @@
-export default function Login() {
+export default function NotFound() {
     return (
-        <div>Login Page</div>
+        <div>404 - Page not found</div>
     );
 }
