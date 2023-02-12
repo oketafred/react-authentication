@@ -2,23 +2,14 @@ import {Link, Navigate, Outlet} from "react-router-dom";
 import {useStateContext} from "../context/ContextProvider.jsx";
 import {useEffect} from "react";
 import axiosClient from "../axios-client.js";
+import Sidebar from "../components/Sidebar.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 export default function DefaultLayout() {
-  const { user, token, notification, setUser, setToken } = useStateContext();
+  const { token, notification, setUser, setToken } = useStateContext();
 
   if (!token) {
     return <Navigate to='/login' />
-  }
-
-  const onLogout = (event) => {
-    event.preventDefault();
-
-    axiosClient.post('logout')
-      .then(() => {
-        setUser({});
-        setToken(null);
-      })
-
   }
 
   useEffect(() => {
@@ -32,16 +23,20 @@ export default function DefaultLayout() {
   }, [])
 
   return (
-    <div>
-      <nav>Coming soon</nav>
-      <div>User here: {user.name}</div>
-      <Link to='/dashboard'>Dashboard</Link> <br/>
-      <Link to='/users'>Users</Link>
-      <div><a onClick={onLogout} href="#">Logout</a></div>
-      <Outlet />
-      {notification &&
-        <div>{ notification }</div>
-      }
+    <div className="bg-gray-100 dark:bg-gray-900">
+    <Sidebar />
+    <div className="ml-auto mb-6 lg:w-[75%] xl:w-[80%] 2xl:w-[85%]">
+      <Navbar />
+
+      <div className="px-6 bg-gray-200 pt-6 2xl:container">
+        <div>
+          <Outlet />
+          {notification &&
+            <div>{ notification }</div>
+          }
+        </div>
+      </div>
+    </div>
     </div>
   );
 }
