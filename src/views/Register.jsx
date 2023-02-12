@@ -1,13 +1,15 @@
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import axiosClient from "../axios-client.js";
-import {useStateContext} from "../context/ContextProvider.jsx";
+import { useStateContext} from "../context/ContextProvider.jsx";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 export default function Register() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
+    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
 
     const { setToken, setUser} = useStateContext();
@@ -22,6 +24,7 @@ export default function Register() {
         }
 
         setErrors(null);
+        setLoading(true);
 
         axiosClient.post('/register', payload)
           .then(({ data }) => {
@@ -34,35 +37,114 @@ export default function Register() {
               setErrors(response.data.errors);
             }
           })
+          .finally(() => {
+            setLoading(false);
+          })
     }
     return (
-      <form onSubmit={onSubmitRegister}>
-        <h2>Register for free</h2>
-        {errors && <div>
-          {Object.keys(errors).map(key => (
-            <p key={key}>{ errors[key][0] }</p>
-          ))}
-        </div>}
-        <div>
-            <input type="text" onChange={event => setName(event.target.value)} required/>
+      <div>
+        <div className="bg-gray-300">
+          <div className="flex items-center justify-center h-screen">
+            <div className="mx-auto w-full md:w-1/3 bg-white rounded-lg">
+              <h1 className="text-center pt-8 text-2xl font-bold text-cyan-600 sm:text-3xl">
+                React - Laravel
+              </h1>
+
+              <form onSubmit={onSubmitRegister} className="mb-0 space-y-4 rounded-lg p-8 shadow">
+                <p className="text-lg text-center font-medium">
+                  Register for free
+                </p>
+                {errors &&
+                  <div>
+                    {Object.keys(errors).map(key => (
+                      <div role="alert" className="rounded border-l-4 border-red-400 bg-red-100 p-4">
+                        <p className="text-sm text-red-600" key={key}>{ errors[key][0] }</p>
+                      </div>
+                    ))}
+                  </div>
+                }
+                <hr/>
+
+                <div>
+                  <label className="text-sm font-medium">Full Name</label>
+                  <div className="relative mt-1">
+                    <input
+                      type="text"
+                      className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
+                      placeholder="Enter Full Name"
+                      onChange={event => setName(event.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Email Address</label>
+                  <div className="relative mt-1">
+                    <input
+                      type="email"
+                      className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
+                      placeholder="Enter email address"
+                      onChange={event => setEmail(event.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Password</label>
+                  <div className="relative mt-1">
+                    <input
+                      type="password"
+                      className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
+                      placeholder="Enter password"
+                      onChange={event => setPassword(event.target.value)}
+                      required
+                    />
+
+                    <span className="absolute inset-y-0 right-4 inline-flex items-center">
+                      <AiFillEyeInvisible className="h-5 w-5 cursor-pointer" />
+                      <AiFillEye className="h-5 w-5 cursor-pointer" />
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Password Confirmation</label>
+                  <div className="relative mt-1">
+                    <input
+                      type="password"
+                      className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
+                      placeholder="Enter password confirmation"
+                      onChange={event => setPasswordConfirmation(event.target.value)}
+                      required
+                    />
+
+                    <span className="absolute inset-y-0 right-4 inline-flex items-center">
+                      <AiFillEyeInvisible className="h-5 w-5 cursor-pointer" />
+                      <AiFillEye className="h-5 w-5 cursor-pointer" />
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    className="block w-full rounded-lg bg-cyan-600 px-5 py-3 text-sm font-medium text-white"
+                  >
+                    {loading ? 'Loading...' : 'Register'}
+                  </button>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Already Registered? <Link to="/login" className="text-cyan-600">Login</Link>
+                  </p>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-        <div>
-            <input type="email" onChange={event => setEmail(event.target.value)} required/>
-        </div>
-        <div>
-            <input type="password" onChange={event => setPassword(event.target.value)} required/>
-        </div>
-        <div>
-            <input type="password" onChange={event => setPasswordConfirmation(event.target.value)} required/>
-        </div>
-        <div>
-            <button type="submit">Register</button>
-        </div>
-        <div>
-            <p>
-                Already Registered? <Link to='/login'>Login</Link>
-            </p>
-        </div>
-      </form>
+      </div>
     );
 }

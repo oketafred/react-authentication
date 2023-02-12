@@ -2,11 +2,9 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axiosClient from "../axios-client.js";
 import { useStateContext } from "../context/ContextProvider.jsx";
-import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 
-export default function Login() {
+export default function ForgotPassword() {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
 
@@ -15,10 +13,7 @@ export default function Login() {
     const onSubmitLogin = (event) => {
         event.preventDefault();
 
-        const payload = {
-            email: email,
-            password: password,
-        }
+        const payload = { email: email }
 
         setErrors(null);
         setLoading(true);
@@ -54,7 +49,7 @@ export default function Login() {
 
                     <form onSubmit={onSubmitLogin} className="mb-0 space-y-4 rounded-lg p-8 shadow">
                         <p className="text-lg text-center font-medium">
-                            Login into your account
+                            Reset your password
                         </p>
                         {errors &&
                         <div>
@@ -69,7 +64,6 @@ export default function Login() {
 
                         <div>
                             <label className="text-sm font-medium">Email Address</label>
-
                             <div className="relative mt-1">
                                 <input
                                   type="email"
@@ -81,44 +75,21 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <div>
-                          <div className="flex items-center justify-between">
-                            <label className="text-sm font-medium">Password</label>
-                            <div className="-mr-2 p-2">
-                              <Link to="/forgot-password" className="text-sm text-cyan-600">
-                                Forgot your password?
-                              </Link>
-                            </div>
-                          </div>
-                            <div className="relative mt-1">
-                                <input
-                                  type="password"
-                                  className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
-                                  placeholder="Enter password"
-                                  onChange={event => setPassword(event.target.value)}
-                                  required
-                                />
-
-                                <span className="absolute inset-y-0 right-4 inline-flex items-center">
-                                  <AiFillEyeInvisible className="h-5 w-5 cursor-pointer" />
-                                  <AiFillEye className="h-5 w-5 cursor-pointer" />
-                                </span>
-                            </div>
-                        </div>
-
                       <div className="pt-4">
                         <button
                           type="submit"
                           disabled={loading}
                           className="block w-full rounded-lg bg-cyan-600 px-5 py-3 text-sm font-medium text-white"
                         >
-                          {loading ? 'Loading...' : 'Sign in'}
+                          {loading ? 'Loading...' : 'Send Password Reset Link'}
                         </button>
                       </div>
 
                       <div>
                         <p className="text-sm text-gray-500">
-                          Not Registered? <Link to='/register' className="text-cyan-600">Create an account</Link>
+                          <Link to='/login' className="text-cyan-600">
+                            Back to Login Page
+                          </Link>
                         </p>
                       </div>
                     </form>
