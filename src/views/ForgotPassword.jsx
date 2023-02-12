@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axiosClient from "../axios-client.js";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -19,7 +20,7 @@ export default function ForgotPassword() {
 
         axiosClient.post('/forgot-password', payload)
           .then(({ data }) => {
-            console.log('Hey', data.message);
+            toast.success(data.message);
           })
           .catch((error) => {
               const response = error.response;
