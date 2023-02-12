@@ -1,5 +1,7 @@
-import {Navigate, Outlet} from "react-router-dom";
-import {useStateContext} from "../context/ContextProvider.jsx";
+import { Navigate, Outlet } from "react-router-dom";
+import { useStateContext } from "../context/ContextProvider.jsx";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function GuestLayout() {
   const { token } = useStateContext();
@@ -10,7 +12,8 @@ export default function GuestLayout() {
 
   return (
       <div>
-          <Outlet />
+        <Outlet />
+        <ToastContainer />
       </div>
   );
 }

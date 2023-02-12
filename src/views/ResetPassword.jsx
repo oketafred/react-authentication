@@ -1,8 +1,10 @@
-import {Link, useNavigate} from "react-router-dom";
-import {useState} from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState} from "react";
 import axiosClient from "../axios-client.js";
-import {AiFillEye, AiFillEyeInvisible} from "react-icons/ai";
-import {useStateContext} from "../context/ContextProvider.jsx";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { useStateContext } from "../context/ContextProvider.jsx";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ResetPassword() {
     const [password, setPassword] = useState('');
@@ -33,7 +35,7 @@ export default function ResetPassword() {
 
         axiosClient.post('/reset-password', payload)
           .then(({ data }) => {
-            setNotification(data.message);
+            toast.success(data.message);
             navigate('/login');
           })
           .catch((error) => {

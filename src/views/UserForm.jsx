@@ -1,14 +1,12 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axiosClient from "../axios-client.js";
-import { useStateContext } from "../context/ContextProvider.jsx";
 import { FaBackward } from "react-icons/fa";
-
+import { toast } from 'react-toastify';
 
 export default function UserForm() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { setNotification } = useStateContext();
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
     const [user, setUser] = useState({
@@ -41,7 +39,7 @@ export default function UserForm() {
         if (user.id) {
           axiosClient.put(`/users/${user.id}`, user)
             .then(() => {
-              setNotification('User was updated successfully');
+              toast.success('User was updated successfully');
               navigate('/users');
             })
             .catch((error) => {
@@ -53,7 +51,7 @@ export default function UserForm() {
         } else {
           axiosClient.post('/users', user)
             .then(() => {
-              setNotification('User was created successfully');
+              toast.success('User was created successfully');
               navigate('/users');
             })
             .catch((error) => {
@@ -67,14 +65,13 @@ export default function UserForm() {
 
     return (
       <div>
-
         <header>
           <div className="mx-auto max-w-screen-xl px-4 py-8 sm:py-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center sm:justify-between">
               <div className="text-center sm:text-left">
                 <h1 className="text-2xl font-bold text-gray-900 sm:text-2xl">
-                  {user.id && <h2>Update User: { user.name }</h2>}
-                  {!user.id && <h2>New User</h2>}
+                  {user.id && <span>Update User: { user.name }</span>}
+                  {!user.id && <span>New User</span>}
                 </h1>
               </div>
 
@@ -95,7 +92,7 @@ export default function UserForm() {
 
 
 
-        <div className="overflow-x-auto p-6 sm:p-8 rounded-lg bg-white border border-gray-200/50 bg-opacity-50 shadow-2xl shadow-gray-600/10 lg:h-full">
+        <div className="overflow-x-auto rounded-lg bg-white border border-gray-200/50 bg-opacity-50 shadow-2xl shadow-gray-600/10 lg:h-full">
           <div>
             {loading && (
               <div>Loading...</div>
