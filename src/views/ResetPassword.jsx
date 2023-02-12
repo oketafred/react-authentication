@@ -1,25 +1,40 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useState} from "react";
 import axiosClient from "../axios-client.js";
-import { useStateContext } from "../context/ContextProvider.jsx";
+import {AiFillEye, AiFillEyeInvisible} from "react-icons/ai";
+import {useStateContext} from "../context/ContextProvider.jsx";
 
-export default function ForgotPassword() {
-    const [email, setEmail] = useState('');
+export default function ResetPassword() {
+    const [password, setPassword] = useState('');
+    const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
+    const { setNotification } = useStateContext();
+
+    const queryParams = new URLSearchParams(window.location.search);
+    const token = queryParams.get("token")
+    const email = queryParams.get("email")
+
+    const navigate = useNavigate();
 
 
-    const onSubmitForgotPassword = (event) => {
+    const onSubmitResetPassword = (event) => {
         event.preventDefault();
 
-        const payload = { email: email }
+        const payload = {
+          token: token,
+          email: email,
+          password: password,
+          password_confirmation: passwordConfirmation
+        }
 
         setErrors(null);
         setLoading(true);
 
-        axiosClient.post('/forgot-password', payload)
+        axiosClient.post('/reset-password', payload)
           .then(({ data }) => {
-            console.log('Hey', data.message);
+            setNotification(data.message);
+            navigate('/login');
           })
           .catch((error) => {
               const response = error.response;
@@ -33,7 +48,8 @@ export default function ForgotPassword() {
           })
           .finally(() => {
             setLoading(false);
-            setEmail('');
+            setPassword('');
+            setPasswordConfirmation('');
           })
     }
 
@@ -46,7 +62,7 @@ export default function ForgotPassword() {
                         React - Laravel
                     </h1>
 
-                    <form onSubmit={onSubmitForgotPassword} className="mb-0 space-y-4 rounded-lg p-8 shadow">
+                    <form onSubmit={onSubmitResetPassword} className="mb-0 space-y-4 rounded-lg p-8 shadow">
                         <p className="text-lg text-center font-medium">
                             Reset your password
                         </p>
@@ -62,16 +78,34 @@ export default function ForgotPassword() {
                         <hr/>
 
                         <div>
-                            <label className="text-sm font-medium">Email Address</label>
+                            <label className="text-sm font-medium">New Password</label>
                             <div className="relative mt-1">
                                 <input
-                                  type="email"
+                                  type="password"
                                   className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
-                                  placeholder="Enter email address"
-                                  onChange={event => setEmail(event.target.value)}
+                                  placeholder="Enter new password"
+                                  onChange={event => setPassword(event.target.value)}
                                   required
                                 />
                             </div>
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium">Password Confirmation</label>
+                            <div className="relative mt-1">
+                              <input
+                                type="password"
+                                className="w-full rounded-lg border-2 border-gray-200 focus:outline-cyan-600 px-4 py-2.5 pr-12 text-sm shadow-sm"
+                                placeholder="Enter password confirmation"
+                                onChange={event => setPasswordConfirmation(event.target.value)}
+                                required
+                              />
+
+                              <span className="absolute inset-y-0 right-4 inline-flex items-center">
+                                <AiFillEyeInvisible className="h-5 w-5 cursor-pointer" />
+                                <AiFillEye className="h-5 w-5 cursor-pointer" />
+                              </span>
+                          </div>
                         </div>
 
                       <div className="pt-4">
